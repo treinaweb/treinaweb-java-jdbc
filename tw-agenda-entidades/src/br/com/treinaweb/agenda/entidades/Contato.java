@@ -6,7 +6,7 @@ public class Contato {
 	private String nome;
 	private int idade;
 	private String telefone;
-
+	
 	public int getId() {
 		return id;
 	}
