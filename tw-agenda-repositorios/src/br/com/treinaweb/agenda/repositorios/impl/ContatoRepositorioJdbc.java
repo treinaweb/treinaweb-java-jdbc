@@ -2,7 +2,10 @@ package br.com.treinaweb.agenda.repositorios.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.treinaweb.agenda.entidades.Contato;
@@ -13,8 +16,19 @@ public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
 	@Override
 	public List<Contato> selecionar() throws SQLException {
 		Connection conexao = null;
+		List<Contato> contatos = new ArrayList<Contato>();
 		conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/tw_jdbc", "root", "root");
-		return null;
+		Statement comando = conexao.createStatement();
+		ResultSet rs = comando.executeQuery("SELECT * FROM contatos");
+		while (rs.next()) {
+			Contato contato = new Contato();
+			contato.setId(rs.getInt("id"));
+			contato.setIdade(rs.getInt("idade"));
+			contato.setNome(rs.getString("nome"));
+			contato.setTelefone(rs.getString("telefone"));
+			contatos.add(contato);
+		}
+		return contatos;
 	}
 
 	@Override
