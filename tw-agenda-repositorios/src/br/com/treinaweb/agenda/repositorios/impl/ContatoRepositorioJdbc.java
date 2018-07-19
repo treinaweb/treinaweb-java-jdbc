@@ -17,16 +17,22 @@ public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
 	public List<Contato> selecionar() throws SQLException {
 		Connection conexao = null;
 		List<Contato> contatos = new ArrayList<Contato>();
-		conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/tw_jdbc", "root", "root");
-		Statement comando = conexao.createStatement();
-		ResultSet rs = comando.executeQuery("SELECT * FROM contatos");
-		while (rs.next()) {
-			Contato contato = new Contato();
-			contato.setId(rs.getInt("id"));
-			contato.setIdade(rs.getInt("idade"));
-			contato.setNome(rs.getString("nome"));
-			contato.setTelefone(rs.getString("telefone"));
-			contatos.add(contato);
+		try {
+			conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/tw_jdbc", "root", "masterkey");
+			Statement comando = conexao.createStatement();
+			ResultSet rs = comando.executeQuery("SELECT * FROM contatos");
+			while (rs.next()) {
+				Contato contato = new Contato();
+				contato.setId(rs.getInt("id"));
+				contato.setIdade(rs.getInt("idade"));
+				contato.setNome(rs.getString("nome"));
+				contato.setTelefone(rs.getString("telefone"));
+				contatos.add(contato);
+			}
+		} finally {
+			if (conexao != null) {
+				conexao.close();
+			}
 		}
 		return contatos;
 	}
@@ -34,19 +40,19 @@ public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
 	@Override
 	public void inserir(Contato entidade) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void atualizar(Contato entidade) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void excluir(Contato entidade) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

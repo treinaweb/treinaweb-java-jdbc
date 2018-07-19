@@ -1,12 +1,14 @@
 package br.com.treinaweb.agenda.fx;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import br.com.treinaweb.agenda.entidades.Contato;
 import br.com.treinaweb.agenda.repositorios.impl.ContatoRepositorio;
+import br.com.treinaweb.agenda.repositorios.impl.ContatoRepositorioJdbc;
 import br.com.treinaweb.agenda.repositorios.interfaces.AgendaRepositorio;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,17 +127,18 @@ public class MainController implements Initializable {
 	}
 
 	private void carregarTabelaContatos() {
-		AgendaRepositorio<Contato> repositorioContato = new ContatoRepositorio();
-		List<Contato> contatos = repositorioContato.selecionar();
-		if (contatos.isEmpty()) {
-			Contato contato = new Contato();
-			contato.setNome("TreinaWeb");
-			contato.setIdade(12);
-			contato.setTelefone("123456");
-			contatos.add(contato);
+		try {
+			AgendaRepositorio<Contato> repositorioContato = new ContatoRepositorioJdbc();
+			List<Contato> contatos = repositorioContato.selecionar();
+			ObservableList<Contato> contatosObservableList = FXCollections.observableArrayList(contatos);
+			this.tabelaContatos.getItems().setAll(contatosObservableList);
+		} catch (SQLException e) {
+			Alert mensagem = new Alert(AlertType.ERROR);
+			mensagem.setTitle("Erro!");
+			mensagem.setHeaderText("Erro no banco de dados");
+			mensagem.setContentText("Houve um erro ao obter a lista de contatos: " + e.getMessage());
+			mensagem.showAndWait();
 		}
-		ObservableList<Contato> contatosObservableList = FXCollections.observableArrayList(contatos);
-		this.tabelaContatos.getItems().setAll(contatosObservableList);
 	}
 
 	private void habilitarEdicaoAgenda(Boolean edicaoEstaHabilitada) {
