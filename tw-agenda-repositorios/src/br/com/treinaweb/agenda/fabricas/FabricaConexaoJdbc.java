@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class FabricaConexaoJdbc {
-	
+
 	public static Connection criarConexao() throws IOException, SQLException {
 		InputStream is = FabricaConexaoJdbc.class.getClassLoader().getResourceAsStream("application.properties");
 		if (is == null) {
@@ -21,5 +21,5 @@ public class FabricaConexaoJdbc {
 				props.getProperty("usuarioConexao"), props.getProperty("senhaConexao"));
 		return conexao;
 	}
-
+	
 }

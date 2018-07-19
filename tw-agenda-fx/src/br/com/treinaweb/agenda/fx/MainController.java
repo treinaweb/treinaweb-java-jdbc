@@ -110,19 +110,27 @@ public class MainController implements Initializable {
 	}
 
 	public void botaoSalvar_Action() {
-		AgendaRepositorio<Contato> repositorioContato = new ContatoRepositorio();
-		Contato contato = new Contato();
-		contato.setNome(txfNome.getText());
-		contato.setIdade(Integer.parseInt(txfIdade.getText()));
-		contato.setTelefone(txfTelefone.getText());
-		if (this.ehInserir) {
-			repositorioContato.inserir(contato);
-		} else {
-			repositorioContato.atualizar(contato);
+		try {
+			AgendaRepositorio<Contato> repositorioContato = new ContatoRepositorioJdbc();
+			Contato contato = new Contato();
+			contato.setNome(txfNome.getText());
+			contato.setIdade(Integer.parseInt(txfIdade.getText()));
+			contato.setTelefone(txfTelefone.getText());
+			if (this.ehInserir) {
+				repositorioContato.inserir(contato);
+			} else {
+				repositorioContato.atualizar(contato);
+			}
+			habilitarEdicaoAgenda(false);
+			carregarTabelaContatos();
+			this.tabelaContatos.getSelectionModel().selectFirst();
+		} catch (Exception e) {
+			Alert mensagem = new Alert(AlertType.ERROR);
+			mensagem.setTitle("Erro!");
+			mensagem.setHeaderText("Erro no banco de dados");
+			mensagem.setContentText("Houve um erro ao manipular o contato: " + e.getMessage());
+			mensagem.showAndWait();
 		}
-		habilitarEdicaoAgenda(false);
-		carregarTabelaContatos();
-		this.tabelaContatos.getSelectionModel().selectFirst();
 	}
 
 	private void carregarTabelaContatos() {
