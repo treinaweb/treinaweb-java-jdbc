@@ -1,7 +1,6 @@
 package br.com.treinaweb.agenda.fx;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -132,7 +131,7 @@ public class MainController implements Initializable {
 			List<Contato> contatos = repositorioContato.selecionar();
 			ObservableList<Contato> contatosObservableList = FXCollections.observableArrayList(contatos);
 			this.tabelaContatos.getItems().setAll(contatosObservableList);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			Alert mensagem = new Alert(AlertType.ERROR);
 			mensagem.setTitle("Erro!");
 			mensagem.setHeaderText("Erro no banco de dados");
