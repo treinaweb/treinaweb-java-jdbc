@@ -1,18 +1,15 @@
 package br.com.treinaweb.agenda.repositorios.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import br.com.treinaweb.agenda.entidades.Contato;
+import br.com.treinaweb.agenda.fabricas.FabricaConexaoJdbc;
 import br.com.treinaweb.agenda.repositorios.interfaces.AgendaRepositorio;
 
 public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
@@ -22,14 +19,7 @@ public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
 		Connection conexao = null;
 		List<Contato> contatos = new ArrayList<Contato>();
 		try {
-			Properties props = new Properties();
-			InputStream is = this.getClass().getClassLoader().getResourceAsStream("application.properties");
-			if (is == null) {
-				throw new FileNotFoundException("O arquivo de configuração do banco de dados não foi encontrado.");
-			}
-			props.load(is);
-			conexao = DriverManager.getConnection(props.getProperty("urlConexao"), props.getProperty("usuarioConexao"), 
-					props.getProperty("senhaConexao"));
+			conexao = FabricaConexaoJdbc.criarConexao();
 			Statement comando = conexao.createStatement();
 			ResultSet rs = comando.executeQuery("SELECT * FROM contatos");
 			while (rs.next()) {
